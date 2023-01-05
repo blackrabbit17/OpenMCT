@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Orthanc</title>
+
+    <script src="lib/forcegraph/forcegraph.js"></script>
+    <script src="lib/chroma/chroma.min.js"></script>
+    <script src="lib/pubsub/pubsub.js"></script>
+
+    <script src="node_modules/openmct/dist/openmct.js"></script>
+
+    <script src="lib/http.js"></script>
+
+    <link rel="stylesheet" href="css/bf.css">
+    <link rel="stylesheet" href="css/loader.css">
+
+    <script src="lib/bf-topics.js"></script>
+    <script src="lib/bf-exchangerun-plugin.js"></script>
+    <script src="lib/bf-transversal-plugin.js"></script>
+    <script src="lib/bf-graphview-plugin.js"></script>
+    <script src="lib/bf-pathview-plugin.js"></script>
+    <script src="lib/bf-orderbook.js"></script>
+
+    <script src="lib/spot-matrix-plugin.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+        openmct.setAssetPath("node_modules/openmct/dist");
+        openmct.install(openmct.plugins.CouchDB('http://localhost:5984/openmct'))
+        openmct.install(openmct.plugins.MyItems());
+        openmct.install(openmct.plugins.UTCTimeSystem());
+        openmct.time.clock("local", {start: -15 * 60 * 1000, end: 0});
+        openmct.time.timeSystem("utc");
+        openmct.install(openmct.plugins.Espresso());
+
+        var FIRESTORM_SERVER = 'http://127.0.0.1:7777/openmct/';
+
+        openmct.install(BFExchangeRunPlugin(FIRESTORM_SERVER));
+        openmct.install(BFExchangeTransversalPlugin(FIRESTORM_SERVER));
+        openmct.install(BFGraphViewPlugin(FIRESTORM_SERVER));
+        openmct.install(BFPathViewPlugin(FIRESTORM_SERVER));
+        openmct.install(BFOrderBookPlugin(FIRESTORM_SERVER));
+
+        openmct.install(SpotMatrixPlugin(FIRESTORM_SERVER));
+
+        openmct.start();
+    </script>
+</body>
+</html>
